@@ -1,0 +1,32 @@
+
+
+.book {
+  border: 7px solid black;
+  background-color: white;
+  border-radius: 15px;
+  padding: 0 4px;
+  width: 500px; /* adjust size */
+  max-width: 100%;
+  aspect-ratio: 3 / 2;
+  display: flex;
+}
+.pageL,	.pageR {
+  height: 100%;
+  width: 50%;
+  display: inline-block;
+  position: relative;
+  border-radius: 10px;
+}
+.pageL {
+  border-left: 1px grey solid;
+}
+.pageR { 
+  border-right: 1px grey solid;
+}
+.seam {
+  width: 7px;
+  background:
+    linear-gradient(to right,
+    white, grey, white);
+}
+	
