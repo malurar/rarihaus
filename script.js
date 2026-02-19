@@ -151,7 +151,7 @@ function cargarPostEnLibro(index) {
       let titulo = document.createElement("h1");
       titulo.textContent = formatPostTitle(index);
       cloned.insertBefore(titulo, cloned.firstChild);
-
+ 
       // Contenedor temporal
       let tempContainer = document.createElement("div");
       Array.from(cloned.children).forEach(el => tempContainer.appendChild(el));
