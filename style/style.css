@@ -1,11 +1,19 @@
 
 .contenedor-book {
-width: 99vw;
-display: flex;
-justify-content: center;
-height: 98vh;
-align-items: center;
+    width: 99vw;
+    display: flex;
+    justify-content: space-evenly;
+    height: 98vh;
+    align-items: center;
+    margin: 0%;
+    flex-direction: column;
 
+
+}
+
+.botones {
+font-size: 30px;
+font-weight: 700;
 
 
 }
@@ -14,12 +22,17 @@ body {
 background-image: url('/images/080C.jpg');
 background-repeat: repeat;
 font-family: "Roboto Slab", serif;
-font-weight: 300;}
+font-weight: 300;
+display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
 
 
 .book {
-  border: 13px solid rgb(88, 55, 47);
-  
+  border: 13px solid rgb(88, 55, 47);  
   background-image: url('/images/Texturelabs_Paper_290L.jpg');
   border-radius: 28px;
   padding: 0 10px;
@@ -41,16 +54,7 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
   border-left: 2px rgba(128, 128, 128, 0.507) solid;
 }
 
-/* Reseteo agresivo para el libro */
-.Parrafo-izq h1, .Parrafo-der h1 {
-    margin: 0 0 15px 0 !important;
-    padding: 0 !important;
-    display: block;
-}
 
-.Parrafo-izq p, .Parrafo-der p {
-    margin: 0 0 10px 0 !important;
-}
 
 .Parrafo-izq, .Parrafo-der {
     margin: 50px;
@@ -74,7 +78,6 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 10px auto;
   object-fit: contain;
 }
 
@@ -174,3 +177,84 @@ h2#postDateLibro, h2 {
 #next { right: 40px; }
 
 
+
+
+/* MENU */
+
+.menu-superior {
+    display: flex;
+    justify-content: center; /* Centra los botones */
+    gap: 15px;               /* Espacio entre botones */
+    flex-wrap: wrap;         /* Si son muchos, se acomodan abajo */
+}
+
+.boton-nav {
+    background-color: #58372f; /* El marrón de tus flechas */
+    color: #fdf6e3;            /* Color crema */
+    text-decoration: none;     /* Quita el subrayado */
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-bottom: 4px solid #3a251f; /* Sombra pixel inferior */
+    transition: transform 0.1s;
+    text-transform: uppercase;
+}
+
+.boton-nav:hover {
+    background-color: #7a4d42;
+    transform: translateY(-2px); /* Pequeño salto al pasar el mouse */
+}
+
+.boton-nav:active {
+    transform: translateY(2px);  /* Se hunde al clickear */
+    border-bottom: 0px;          /* Desaparece la sombra al hundirse */
+}
+
+
+/* ARCHIVE */
+
+
+/* --- ESTILO DE LA LISTA EN EL ARCHIVO --- */
+
+.lista-archivo {
+    list-style: none; /* Quitamos los puntos de la lista */
+    padding: 0;
+    margin: 20px 10px;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.lista-archivo li {
+    margin-bottom: 12px;
+    border-bottom: 1px dashed rgba(88, 55, 47, 0.3); /* Línea sutil de cuaderno */
+    padding-bottom: 4px;
+    transition: all 0.2s ease;
+}
+
+.lista-archivo a {
+    text-decoration: none;
+    color: #58372f; /* El color marrón de tu texto */
+    font-size: 1.1rem;
+    display: block;
+    line-height: 1.2;
+}
+
+/* Efecto al pasar el mouse sobre un post en el índice */
+.lista-archivo li:hover {
+    padding-left: 8px; /* Pequeño desplazamiento a la derecha */
+    background-color: rgba(88, 55, 47, 0.05); /* Resaltado muy suave */
+}
+
+.lista-archivo a:hover {
+    color: #7a4d42; /* Cambio sutil de color */
+    font-weight: bold;
+}
+
+/* Título de la página de Archivo dentro del libro */
+#izq h1, #der h1 {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: #58372f;
+    text-align: center;
+    font-size: 1.8rem;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

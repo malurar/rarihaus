@@ -189,23 +189,34 @@ function cargarPostEnLibro(index) {
 
 // 4. INICIALIZACIÓN Y NAVEGACIÓN
 document.addEventListener("DOMContentLoaded", function() {
+    // Detectamos si estamos en la página de archivo
+    const esPaginaArchivo = window.location.pathname.includes('archive.html');
     const libroExiste = document.getElementById("izq") && document.getElementById("der");
 
-    if (libroExiste && postsArray.length > 0) {
+    if (esPaginaArchivo) {
+        // MODO ARCHIVO: No cargamos posts, generamos la lista
+        generarIndice();
+    } 
+    else if (libroExiste && postsArray.length > 0) {
+        // MODO LIBRO: Cargamos el sistema normal de lectura
+        
+        // Verificar si venimos desde el índice con un post específico
+        const urlParams = new URLSearchParams(window.location.search);
+        const postParam = urlParams.get('post');
+        if (postParam !== null) currentBookIndex = parseInt(postParam);
+
         cargarPostEnLibro(currentBookIndex);
 
+        // Lógica de botones (se mantiene igual)
         const btnPrev = document.getElementById("prev");
         const btnNext = document.getElementById("next");
 
         if (btnNext) {
             btnNext.onclick = function() {
-                // Si hay más hojas adelante en el mismo post
                 if ((subPaginaActual * 2) + 2 < paginasDelPost.length) {
                     subPaginaActual++;
                     renderizarLibro();
-                } 
-                // Si no, pasar al siguiente post
-                else if (currentBookIndex < postsArray.length - 1) {
+                } else if (currentBookIndex < postsArray.length - 1) {
                     currentBookIndex++;
                     cargarPostEnLibro(currentBookIndex);
                 }
@@ -214,13 +225,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (btnPrev) {
             btnPrev.onclick = function() {
-                // Si hay hojas atrás en el mismo post
                 if (subPaginaActual > 0) {
                     subPaginaActual--;
                     renderizarLibro();
-                } 
-                // Si no, volver al post anterior
-                else if (currentBookIndex > 0) {
+                } else if (currentBookIndex > 0) {
                     currentBookIndex--;
                     cargarPostEnLibro(currentBookIndex);
                 }
@@ -228,3 +236,31 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+
+function generarIndice() {
+    const izq = document.getElementById("izq");
+    const der = document.getElementById("der");
+    if (!izq || !der) return;
+
+    izq.innerHTML = "<h1>Índice</h1>";
+    der.innerHTML = "<h1>...</h1>";
+
+    let ul = document.createElement("ul");
+    ul.className = "lista-archivo"; // Para que le des estilo en CSS
+
+    postsArray.forEach((post, i) => {
+        let li = document.createElement("li");
+        let a = document.createElement("a");
+        
+        // Usamos tu función formatPostTitle para que los nombres se vean limpios
+        a.textContent = formatPostTitle(i);
+        a.href = "index.html?post=" + i;
+        
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+
+    // En el archivo, mostramos la lista en la página izquierda
+    izq.appendChild(ul);
+}
