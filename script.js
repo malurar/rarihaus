@@ -16,6 +16,7 @@ let authorName = "Autor";
 let authorLink = ""; 
 
 let postsArray = [
+  ["posts/2020-11-11-Un-titulo-tituloso.html"],
     ["posts/2020-11-10-Post-nuevo.html"],
     ["posts/2020-11-10-HTML-cheat-sheet.html"]
 ];

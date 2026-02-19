@@ -64,12 +64,13 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
     box-sizing: border-box;
     display: block;
     position: relative;
+    line-height: 1.5; /* Altura de línea fija */
 }
 
 .Parrafo-izq p, .Parrafo-der p {
     hyphens: auto;          /* Cortará las palabras con guiones si son muy largas */
     line-height: 1.4;       /* Un poco de aire entre líneas para que sea legible */
-    margin-bottom: 15px;    /* Espacio entre párrafos */
+margin-bottom: 1.5em; /* El mismo que el line-height */
     font-size: 1.6cap;
 }
 
