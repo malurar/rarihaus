@@ -10,208 +10,192 @@
   // 3. Creating HTML Sections to Be Inserted (Header, Footer, etc)
   // 4. Inserting the Sections Into our Actual HTML Pages
 
-//-----------------------------
-
-//-----------------------------
-//==[ 1. BASIC INFO ]==
-let blogName = "My Blog Name";
-let authorName = "My Name Here";
+// 1. CONFIGURACIÓN BÁSICA
+let blogName = "Mi Blog";
+let authorName = "Autor";
 let authorLink = ""; 
 
-//-----------------------------
-//==[ 2. POSTS ARRAY ]==
 let postsArray = [
-  [ "posts/2020-11-10-Post-Template.html" ],
-  [ "posts/2020-11-10-HTML-cheat-sheet.html" ],
+    ["posts/2020-11-10-Post-nuevo.html"],
+    ["posts/2020-11-10-HTML-cheat-sheet.html"]
 ];
 
-//-----------------------------
-//==[ 3. GENERATING THE HTML SECTIONS TO BE INSERTED ]==
+// 2. VARIABLES DE ESTADO Y UTILIDADES
 let url = window.location.pathname;
 const postDateFormat = /\d{4}\-\d{2}\-\d{2}\-/;
-let relativePath = url.includes("posts/") ? ".." : ".";
-
-let headerHTML = '<ul> <li><a href="' + relativePath + '/index.html">Home</a></li>' + 
-                 '<li><a href="' + relativePath + '/archive.html">Archive</a></li>' +
-                 '<li><a href="' + relativePath + '/about.html">About</a></li> </ul>';
-
-let footerHTML = "<hr><p>" + blogName + " is written by <a href='" + authorLink + "'>" + authorName + "</a>, built with <a href='https://zonelets.net/'>Zonelets</a>, and hosted by <a href='https://neocities.org/'>Neocities!</a></p>";
-
-let currentIndex = -1;
-let currentFilename = url.substring(url.lastIndexOf('posts/'));
-if (!currentFilename.endsWith(".html")) currentFilename += ".html";
-
-for (let i = 0; i < postsArray.length; i++) {
-  if (postsArray[i][0] === currentFilename) currentIndex = i;
-}
+let currentBookIndex = 0;   // Índice del post en la lista
+let subPaginaActual = 0;    // Hoja actual dentro del post largo
+let paginasDelPost = [];    // Almacena el contenido dividido por hojas
+const MAX_HEIGHT = 560;     // Altura máxima según tu CSS
 
 function formatPostTitle(i) {
-  if (postsArray[i].length > 1) return decodeURI(postsArray[i][1]);
-  else {
-    if (postDateFormat.test(postsArray[i][0].slice(6,17))) {
-      return postsArray[i][0].slice(17,-5).replace(/-/g," ");
+    if (postsArray[i].length > 1) return decodeURI(postsArray[i][1]);
+    let name = postsArray[i][0];
+    if (postDateFormat.test(name.slice(6, 17))) {
+        return name.slice(17, -5).replace(/-/g, " ");
     } else {
-      return postsArray[i][0].slice(6,-5).replace(/-/g," ");
+        return name.slice(6, -5).replace(/-/g, " ");
     }
-  }
 }
 
-let currentPostTitle = "";
-let niceDate = "";
-if (currentIndex > -1) {
-  currentPostTitle = formatPostTitle(currentIndex);
-  if (postDateFormat.test(postsArray[currentIndex][0].slice(6,17))) {
-    let monthSlice = postsArray[currentIndex][0].slice(11,13);
-    let month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(monthSlice)-1];
-    niceDate = postsArray[currentIndex][0].slice(14,16) + " " + month + ", " + postsArray[currentIndex][0].slice(6,10);
-  }
+// 3. LÓGICA DE DISTRIBUCIÓN (Paginación interna)
+function repartirContenidoEnHojas(container) {
+    const izq = document.getElementById("izq");
+    paginasDelPost = []; 
+    subPaginaActual = 0;
+
+    let elementos = Array.from(container.children);
+    let paginaActual = [];
+    let alturaAcumulada = 0;
+
+    // Medidor invisible para calcular espacio real
+    let medidor = document.createElement("div");
+    medidor.style.visibility = "hidden";
+    medidor.style.position = "absolute";
+    medidor.style.width = (izq.clientWidth || 500) + "px";
+    document.body.appendChild(medidor);
+
+    elementos.forEach((el) => {
+        let clon = el.cloneNode(true);
+        medidor.appendChild(clon);
+        let altoElemento = medidor.offsetHeight;
+
+        // Si el elemento no cabe, cerramos esta página y abrimos otra
+        if (alturaAcumulada + altoElemento > MAX_HEIGHT && paginaActual.length > 0) {
+            paginasDelPost.push(paginaActual);
+            paginaActual = [el.cloneNode(true)];
+            alturaAcumulada = altoElemento;
+        } else {
+            paginaActual.push(el.cloneNode(true));
+            alturaAcumulada += altoElemento;
+        }
+        medidor.innerHTML = ""; 
+    });
+    
+    if (paginaActual.length > 0) paginasDelPost.push(paginaActual);
+    document.body.removeChild(medidor);
+
+    renderizarLibro();
 }
 
-// Post List HTML
-function formatPostLink(i) {
-  let postTitle_i = postsArray[i].length > 1 ? decodeURI(postsArray[i][1]) :
-                    postDateFormat.test(postsArray[i][0].slice(6,17)) ? postsArray[i][0].slice(17,-5).replace(/-/g," ") :
-                    postsArray[i][0].slice(6,-5).replace(/-/g," ");
+// Muestra las páginas correspondientes en el libro
+function renderizarLibro() {
+    const izq = document.getElementById("izq");
+    const der = document.getElementById("der");
+    izq.innerHTML = "";
+    der.innerHTML = "";
 
-  if (postDateFormat.test(postsArray[i][0].slice(6,17))) {
-    return '<li><a href="' + relativePath + '/'+ postsArray[i][0] +'">' + postsArray[i][0].slice(6,16) + " \u00BB " + postTitle_i + '</a></li>';
-  } else {
-    return '<li><a href="' + relativePath + '/'+ postsArray[i][0] +'">' + postTitle_i + '</a></li>';
-  }
+    let indiceIzq = subPaginaActual * 2;
+    let indiceDer = (subPaginaActual * 2) + 1;
+
+    if (paginasDelPost[indiceIzq]) {
+        paginasDelPost[indiceIzq].forEach(el => izq.appendChild(el.cloneNode(true)));
+    }
+    if (paginasDelPost[indiceDer]) {
+        paginasDelPost[indiceDer].forEach(el => der.appendChild(el.cloneNode(true)));
+    }
 }
-
-let postListHTML = "<ul>";
-for (let i = 0; i < postsArray.length; i++) postListHTML += formatPostLink(i);
-postListHTML += "</ul>";
-
-let recentPostsCutoff = 3;
-let recentPostListHTML = "<h2>Recent Posts:</h2><ul>";
-let numberOfRecentPosts = Math.min(recentPostsCutoff, postsArray.length);
-for (let i = 0; i < numberOfRecentPosts; i++) recentPostListHTML += formatPostLink(i);
-if (postsArray.length > recentPostsCutoff) recentPostListHTML += '<li class="moreposts"><a href=' + relativePath + '/archive.html>\u00BB more posts</a></li></ul>';
-else recentPostListHTML += "</ul>";
-
-// Next / Previous Links
-let nextprevHTML = "";
-let nextlink = "";
-let prevlink = "";
-
-if (postsArray.length < 2) nextprevHTML = '<a href="' + relativePath + '/index.html">Home</a>';
-else if (currentIndex === 0) {
-  prevlink = postsArray[currentIndex + 1][0];
-  nextprevHTML = '<a href="' + relativePath + '/index.html">Home</a> | <a href="'+ relativePath + '/' + prevlink +'">Previous Post \u00BB</a>';
-} else if (currentIndex === postsArray.length - 1) {
-  nextlink = postsArray[currentIndex - 1][0];
-  nextprevHTML = '<a href="' + relativePath + '/' + nextlink +'">\u00AB Next Post</a> | <a href="' + relativePath + '/index.html">Home</a>';
-} else if (0 < currentIndex && currentIndex < postsArray.length - 1) {
-  nextlink = postsArray[currentIndex - 1][0];
-  prevlink = postsArray[currentIndex + 1][0];
-  nextprevHTML = '<a href="' + relativePath + '/'+ nextlink +'">\u00AB Next Post</a> | <a href="' + relativePath + '/index.html">Home</a> | <a href="' + relativePath + '/'+ prevlink +'">Previous Post \u00BB</a>';
-}
-
-// Insert sections
-if (document.getElementById("nextprev")) document.getElementById("nextprev").innerHTML = nextprevHTML;
-if (document.getElementById("postlistdiv")) document.getElementById("postlistdiv").innerHTML = postListHTML;
-if (document.getElementById("recentpostlistdiv")) document.getElementById("recentpostlistdiv").innerHTML = recentPostListHTML;
-if (document.getElementById("header")) document.getElementById("header").innerHTML = headerHTML;
-if (document.getElementById("blogTitleH1")) document.getElementById("blogTitleH1").innerHTML = blogTitle;
-if (document.getElementById("postTitleH1")) document.getElementById("postTitleH1").innerHTML = currentPostTitle;
-if (document.getElementById("postDate")) document.getElementById("postDate").innerHTML = niceDate;
-if (document.getElementById("footer")) document.getElementById("footer").innerHTML = footerHTML;
-if (document.title === "Blog Post") document.title = currentPostTitle;
-
-//==============================
-//==[ FUNCION UNIFICADA PARA CARGAR POSTS EN LIBRO ]==
-let currentBookIndex = 0;
 
 function cargarPostEnLibro(index) {
-  const izq = document.getElementById("izq");
-  const der = document.getElementById("der");
-  if (!izq || !der) return;
+    let postPath = postsArray[index][0];
 
-  izq.innerHTML = "";
-  der.innerHTML = "";
+    fetch(postPath)
+        .then(response => response.text())
+        .then(data => {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(data, "text/html");
+            let content = doc.querySelector("#content");
+            if (!content) return;
 
-  let postPath = postsArray[index][0];
+            // 1. Extraer la fecha del HTML original antes de borrarla
+            let fechaOriginal = doc.querySelector("#postDate") ? doc.querySelector("#postDate").innerHTML : "";
+            
+            // Si el post no tiene fecha escrita, intentamos sacarla del nombre del archivo (formato Zonelets)
+            if (!fechaOriginal && postDateFormat.test(postPath.slice(6, 17))) {
+                let monthSlice = postPath.slice(11, 13);
+                let month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(monthSlice)-1];
+                fechaOriginal = postPath.slice(14, 16) + " " + month + ", " + postPath.slice(6, 10);
+            }
 
-  fetch(postPath)
-    .then(response => response.text())
-    .then(data => {
-      let parser = new DOMParser();
-      let doc = parser.parseFromString(data, "text/html");
-      let content = doc.querySelector("#content");
-      if (!content) return;
+            // 2. Limpiamos elementos que no queremos del cuerpo del texto
+            content.querySelectorAll("#nextprev, #postTitleH1, #postDate").forEach(el => el.remove());
 
-      let cloned = content.cloneNode(true);
-      cloned.querySelector("#nextprev")?.remove();
-      cloned.querySelector("#postTitleH1")?.remove();
-      cloned.querySelector("#postDate")?.remove();
+            let temp = document.createElement("div");
+            
+            // 3. Insertar el Título
+            let titulo = document.createElement("h1");
+            titulo.textContent = formatPostTitle(index);
+            temp.appendChild(titulo);
 
-      // Título incluido en el flujo
-      let titulo = document.createElement("h1");
-      titulo.textContent = formatPostTitle(index);
-      cloned.insertBefore(titulo, cloned.firstChild);
- 
-      // Contenedor temporal
-      let tempContainer = document.createElement("div");
-      Array.from(cloned.children).forEach(el => tempContainer.appendChild(el));
+            // 4. Insertar la Fecha (si existe)
+            if (fechaOriginal) {
+                let fechaElemento = document.createElement("h2"); // Usamos h2 como en tu CSS
+                fechaElemento.id = "postDateLibro"; // ID único por si quieres darle estilo
+                fechaElemento.innerHTML = fechaOriginal;
+                fechaElemento.style.marginBottom = "20px"; // Espacio antes del texto
+                temp.appendChild(fechaElemento);
+            }
 
-      // Esperar imágenes antes de repartir
-      let images = tempContainer.querySelectorAll("img");
-      if (images.length === 0) repartirContenido();
-      else {
-        let loaded = 0;
-        images.forEach(img => {
-          img.onload = img.onerror = () => {
-            loaded++;
-            if (loaded === images.length) repartirContenido();
-          };
-        });
-      }
+            // 5. Pasar el resto del contenido
+            while (content.firstChild) {
+                temp.appendChild(content.firstChild);
+            }
 
-      function repartirContenido() {
-        let children = Array.from(tempContainer.children);
-        izq.innerHTML = "";
-        der.innerHTML = "";
-
-        let maxHeight = izq.clientHeight;
-
-        for (let el of children) {
-          izq.appendChild(el);
-          if (izq.scrollHeight > maxHeight) {
-            izq.removeChild(el);
-            der.appendChild(el);
-          }
-        }
-      }
-    })
-    .catch(error => console.log("Error cargando post:", error));
+            // 6. Esperar imágenes y repartir
+            let images = temp.querySelectorAll("img");
+            if (images.length === 0) {
+                repartirContenidoEnHojas(temp);
+            } else {
+                let loaded = 0;
+                images.forEach(img => {
+                    img.onload = img.onerror = () => {
+                        loaded++;
+                        if (loaded === images.length) repartirContenidoEnHojas(temp);
+                    };
+                });
+            }
+        })
+        .catch(err => console.error("Error cargando post:", err));
 }
 
-//==============================
-//==[ INICIALIZAR INDEX Y NAVEGACION ]==
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname.endsWith("index.html") && postsArray.length > 0) {
-    currentBookIndex = 0;
-    cargarPostEnLibro(currentBookIndex);
+// 4. INICIALIZACIÓN Y NAVEGACIÓN
+document.addEventListener("DOMContentLoaded", function() {
+    const libroExiste = document.getElementById("izq") && document.getElementById("der");
 
-    const prevBtn = document.getElementById("next");
-    const nextBtn = document.getElementById("prev");
-
-    if (prevBtn) prevBtn.addEventListener("click", () => {
-      if (currentBookIndex < postsArray.length - 1) {
-        currentBookIndex++;
+    if (libroExiste && postsArray.length > 0) {
         cargarPostEnLibro(currentBookIndex);
-      }
-    });
 
-    if (nextBtn) nextBtn.addEventListener("click", () => {
-      if (currentBookIndex > 0) {
-        currentBookIndex--;
-        cargarPostEnLibro(currentBookIndex);
-      }
-    });
-  }
+        const btnPrev = document.getElementById("prev");
+        const btnNext = document.getElementById("next");
+
+        if (btnNext) {
+            btnNext.onclick = function() {
+                // Si hay más hojas adelante en el mismo post
+                if ((subPaginaActual * 2) + 2 < paginasDelPost.length) {
+                    subPaginaActual++;
+                    renderizarLibro();
+                } 
+                // Si no, pasar al siguiente post
+                else if (currentBookIndex < postsArray.length - 1) {
+                    currentBookIndex++;
+                    cargarPostEnLibro(currentBookIndex);
+                }
+            };
+        }
+
+        if (btnPrev) {
+            btnPrev.onclick = function() {
+                // Si hay hojas atrás en el mismo post
+                if (subPaginaActual > 0) {
+                    subPaginaActual--;
+                    renderizarLibro();
+                } 
+                // Si no, volver al post anterior
+                else if (currentBookIndex > 0) {
+                    currentBookIndex--;
+                    cargarPostEnLibro(currentBookIndex);
+                }
+            };
+        }
+    }
 });
-
-

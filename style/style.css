@@ -42,13 +42,31 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
   border-left: 2px rgba(128, 128, 128, 0.507) solid;
 }
 
+/* Reseteo agresivo para el libro */
+.Parrafo-izq h1, .Parrafo-der h1 {
+    margin: 0 0 15px 0 !important;
+    padding: 0 !important;
+    display: block;
+}
 
-.Parrafo-izq,
-.Parrafo-der {
-  margin: 50px;
-  height: 550px;
-  overflow: hidden;
-  padding: 2px;
+.Parrafo-izq p, .Parrafo-der p {
+    margin: 0 0 10px 0 !important;
+}
+
+.Parrafo-izq, .Parrafo-der {
+    margin: 50px;
+    height: 550px; /* Asegúrate que este número coincida con el JS */
+    overflow: hidden;
+    padding: 0;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+}
+
+.Parrafo-izq p, .Parrafo-der p {
+    hyphens: auto;          /* Cortará las palabras con guiones si son muy largas */
+    line-height: 1.4;       /* Un poco de aire entre líneas para que sea legible */
+    margin-bottom: 15px;    /* Espacio entre párrafos */
 }
 
 .Parrafo-izq img,
@@ -71,11 +89,12 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
         position: sticky;
 }
 	
-
 h1 {
-font-family: "Pixelify Sans", sans-serif;
-font-weight: 300;
-margin: 0 ;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: 300;
+  margin: 0 0 10px 0; /* Asegúrate que el margen superior sea 0 */
+  padding: 0;
+  line-height: 1.1;
 }
 
 h2 {
@@ -92,3 +111,69 @@ span {
   color: #58372F;
 }
 
+h2#postDateLibro, h2 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #58372F;
+    margin-top: -10px; /* Para que quede pegadito al título */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Centrar títulos y fechas dentro de las páginas del libro */
+.Parrafo-izq h1, 
+.Parrafo-der h1,
+#postDateLibro {
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+/* Ajuste opcional para la fecha */
+#postDateLibro {
+    margin-top: -5px; /* Para que no quede tan lejos del h1 */
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+#prev, #next {
+background-color: #58372f00;
+    color: #161616;
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 24px;       /* Tamaño grande para la flecha */
+    width: 50px;           /* Ancho fijo para que sea un cuadrado */
+    height: 50px;          /* Alto fijo */
+    border: none;
+    border-radius: 0px;    /* Sin redondeado para look pixel */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Sombra de bloque pixelada */
+    
+    position: absolute;
+    bottom: 30px;
+    padding: 0;
+    transition: none;      /* En pixel art, los movimientos bruscos quedan mejor */
+}
+
+#prev { left: 40px; }
+#next { right: 40px; }
+
+/* Efecto al presionar (se mueve la sombra) */
+#prev:active, #next:active {
+    transform: translate(2px, 2px);
+}
+
+/* Efecto Hover opcional */
+#prev:hover, #next:hover {
+color: #3a251f;
+
+
+
+
+
+
+}
