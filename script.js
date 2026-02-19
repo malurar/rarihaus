@@ -94,7 +94,36 @@ function renderizarLibro() {
     if (paginasDelPost[indiceDer]) {
         paginasDelPost[indiceDer].forEach(el => der.appendChild(el.cloneNode(true)));
     }
+// --- LÓGICA PARA OCULTAR FLECHAS ---
+    const btnPrev = document.getElementById("prev");
+    const btnNext = document.getElementById("next");
+
+    if (btnPrev) {
+        // Ocultamos el botón "Anterior" (izquierda) si:
+        // Estamos en el post 0 Y en la primera hoja de ese post
+        if (currentBookIndex === 0 && subPaginaActual === 0) {
+            btnPrev.style.visibility = "hidden";
+        } else {
+            btnPrev.style.visibility = "visible";
+        }
+    }
+
+    if (btnNext) {
+        // Ocultamos el botón "Siguiente" (derecha) si:
+        // Estamos en el último post Y en la última pareja de páginas
+        let esUltimoPost = currentBookIndex === postsArray.length - 1;
+        let esUltimaHoja = (subPaginaActual * 2) + 2 >= paginasDelPost.length;
+
+        if (esUltimoPost && esUltimaHoja) {
+            btnNext.style.visibility = "hidden";
+        } else {
+            btnNext.style.visibility = "visible";
+        }
+    }
+
+
 }
+
 
 function cargarPostEnLibro(index) {
     let postPath = postsArray[index][0];
