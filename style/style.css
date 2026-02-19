@@ -11,7 +11,7 @@ align-items: center;
 }
 
 body {
-background-image: url('./images/080C.jpg');
+background-image: url('/images/080C.jpg');
 background-repeat: repeat;
 font-family: "Roboto Slab", serif;
 font-size: 18px;
@@ -21,7 +21,7 @@ font-weight: 300;}
 .book {
   border: 13px solid rgb(88, 55, 47);
   
-  background-image: url('./images/Texturelabs_Paper_290L.jpg');
+  background-image: url('/images/Texturelabs_Paper_290L.jpg');
   border-radius: 28px;
   padding: 0 10px;
   width: 1300px; /* adjust size */
@@ -48,6 +48,16 @@ box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.342);;
   margin: 50px;
   height: 550px;
   overflow: hidden;
+  padding: 2px;
+}
+
+.Parrafo-izq img,
+.Parrafo-der img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px auto;
+  object-fit: contain;
 }
 
 .pageR { 
