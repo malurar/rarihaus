@@ -19,7 +19,7 @@ font-weight: 700;
 }
 
 body {
-background-image: url('/images/080C.jpg');
+background-image: url('/images/080C.JPG');
 background-repeat: repeat;
 font-family: "Roboto Slab", serif;
 font-weight: 300;
@@ -33,7 +33,7 @@ display: flex;
 
 .book {
   border: 13px solid rgb(88, 55, 47);  
-  background-image: url('/images/Texturelabs_Paper_290L.jpg');
+  background-image: url('/images/Texturelabs_Paper_290L.JPG');
   border-radius: 28px;
   padding: 0 10px;
   width: 1300px; /* adjust size */
