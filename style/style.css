@@ -241,7 +241,7 @@ font-family: "Roboto Slab", serif;
 
 .lista-archivo a {
     text-decoration: none;
-    color: #58372f; /* El color marrón de tu texto */
+    color: #221121; /* El color marrón de tu texto */
     font-size: 1.9rem;
     display: block;
     line-height: 1.2;
@@ -254,7 +254,7 @@ font-family: "Roboto Slab", serif;
 }
 
 .lista-archivo a:hover {
-    color: #7a4d42; /* Cambio sutil de color */
+    color: #7bb41e; /* Cambio sutil de color */
   
 }
 
@@ -266,4 +266,10 @@ font-family: "Roboto Slab", serif;
     font-size: 3rem;
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+
+mark {
+background-color: #b2f14b;
+
 }
