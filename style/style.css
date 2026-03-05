@@ -114,20 +114,20 @@ h2 {
 font-size: 15px;
 font-weight: 500;
 letter-spacing: 0.5cap;
-color: #58372F;
+color: #221121;
 margin: 0;
 
 }
 
 span {
   font-weight: 500;
-  color: #58372F;
+  color: #7bb41e;
 }
 
 h2#postDateLibro, h2 {
     font-size: 14px;
     font-weight: 500;
-    color: #58372F;
+    color: #221121;
     margin-top: -10px; /* Para que quede pegadito al título */
     margin-bottom: 20px;
     text-transform: uppercase;

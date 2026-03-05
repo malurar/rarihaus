@@ -16,9 +16,8 @@ let authorName = "Autor";
 let authorLink = ""; 
 
 let postsArray = [
-  ["posts/2020-11-11-Un-titulo-tituloso.html"],
-    ["posts/2020-11-10-Post-nuevo.html"],
-    ["posts/2020-11-10-HTML-cheat-sheet.html"]
+    ["posts/2026-03-06-Sumisa.html"],
+  ["posts/2026-03-05-Reflujo.html"]
 ];
 
 // 2. VARIABLES DE ESTADO Y UTILIDADES
