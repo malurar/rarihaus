@@ -16,6 +16,8 @@ let authorName = "Autor";
 let authorLink = ""; 
 
 let postsArray = [
+    
+    ["posts/2026-03-18-Boliche.html"],
     ["posts/2026-03-06-Sumisa.html"],
   ["posts/2026-03-05-Reflujo.html"]
 ];
@@ -190,7 +192,8 @@ function cargarPostEnLibro(index) {
 // 4. INICIALIZACIÓN Y NAVEGACIÓN
 document.addEventListener("DOMContentLoaded", function() {
     // Detectamos si estamos en la página de archivo
-    const esPaginaArchivo = window.location.pathname.includes('archive.html');
+    const path = window.location.pathname.toLowerCase();
+const esPaginaArchivo = path.endsWith('archive.html') || path.endsWith('archive');
     const libroExiste = document.getElementById("izq") && document.getElementById("der");
 
     if (esPaginaArchivo) {
